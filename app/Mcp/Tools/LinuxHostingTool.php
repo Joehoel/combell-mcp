@@ -14,15 +14,15 @@ class LinuxHostingTool extends Tool
      * The tool's description.
      */
     protected string $description = <<<'MARKDOWN'
-        Get a specific Linux hosting from the Combell API by hosting identifier.
+        Use this tool when you need the full detail payload for a single Linux hosting. Provide the hosting's domain name to receive configuration data such as IP address information, FTP/SSH credentials, PHP version, defined subsites, and the list of linked MySQL database names.
 
-        This tool will give information on the following resources:
-            - IP address
-            - FTP credentials
-            - SSH credentials
-            - Subsites
-            - PHP version
-            - Names of all databases
+        **Returns**
+        The raw object returned by Combell's `/linuxhostings/{domain}` endpoint, which includes keys such as:
+        - `domain_name`, `servicepack_id`, `ip`, `ip_type`
+        - `ftp_enabled`, `ftp_username`
+        - `ssh_host`, `ssh_username`
+        - `php_version`, `sites[]`, `mysql_database_names[]`
+        - `max_webspace_size`, `max_size`, `webspace_usage`, `actual_size`
     MARKDOWN;
 
     /**
@@ -30,7 +30,7 @@ class LinuxHostingTool extends Tool
      */
     public function handle(Request $request, Combell $combell): Response
     {
-        $domain = $request->get("domain");
+        $domain = $request->get('domain');
 
         $hosting = $combell->linuxHostings()->getLinuxHosting($domain)->object();
 
@@ -45,7 +45,9 @@ class LinuxHostingTool extends Tool
     public function schema(JsonSchema $schema): array
     {
         return [
-            "domain" => JsonSchema::string()->required()->description("The domain name of the Linux hosting"),
+            'domain' => JsonSchema::string()
+                ->required()
+                ->description("The domain name that identifies the Linux hosting (for example, 'example.com')."),
         ];
     }
 }

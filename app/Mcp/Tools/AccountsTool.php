@@ -4,7 +4,6 @@ namespace App\Mcp\Tools;
 
 use App\Mcp\Traits\PaginationTrait;
 use Illuminate\JsonSchema\JsonSchema;
-use Illuminate\Support\Facades\Log;
 use Joehoel\Combell\Combell;
 use Laravel\Mcp\Request;
 use Laravel\Mcp\Response;
@@ -18,7 +17,11 @@ class AccountsTool extends Tool
      * The tool's description.
      */
     protected string $description = <<<'MARKDOWN'
-        Get the accounts from the Combell API with pagination support.
+        Use this tool when you need an overview of Combell customer accounts, including each account's numeric `id`, public `identifier` (often a primary domain name), and associated `servicepack_id`. It walks the `/accounts` endpoint with automatic pagination so you do not have to manage `skip`/`take` yourself.
+
+        **Returns**
+        - `accounts`: array of account records as returned by the Combell API (`id`, `identifier`, `servicepack_id`, and any additional fields provided by the platform).
+        - `total_count`: integer count of the collected account records.
     MARKDOWN;
 
     /**
@@ -26,20 +29,18 @@ class AccountsTool extends Tool
      */
     public function handle(Request $request, Combell $combell): Response
     {
-        // Get pagination parameters from request
-        $pageSize = $request->get('page_size', 100);
+        // Retrieve optional filters from the request
         $assetType = $request->get('asset_type');
         $identifier = $request->get('identifier');
 
         // Use pagination to get all accounts
         $accounts = $this->paginate(
-            fn($skip, $take) => $combell->accounts()->getAccounts($skip, $take, $assetType, $identifier),
-            $pageSize
+            fn ($skip, $take) => $combell->accounts()->getAccounts($skip, $take, $assetType, $identifier)
         );
 
         return Response::json([
-            "accounts" => $accounts,
-            "total_count" => count($accounts)
+            'accounts' => $accounts,
+            'total_count' => count($accounts),
         ]);
     }
 
@@ -51,9 +52,12 @@ class AccountsTool extends Tool
     public function schema(JsonSchema $schema): array
     {
         return [
-            "page_size" => JsonSchema::integer()->default(100)->description("Number of items per page (default: 100)"),
-            "asset_type" => JsonSchema::string()->nullable()->description("Filter by asset type"),
-            "identifier" => JsonSchema::string()->nullable()->description("Filter by identifier"),
+            'asset_type' => JsonSchema::string()
+                ->nullable()
+                ->description("Optional Combell asset type filter (e.g. 'linuxhosting', 'domain')."),
+            'identifier' => JsonSchema::string()
+                ->nullable()
+                ->description('Optional account identifier filter (usually the primary domain name).'),
         ];
     }
 }

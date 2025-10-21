@@ -17,7 +17,11 @@ class LinuxHostingsTool extends Tool
      * The tool's description.
      */
     protected string $description = <<<'MARKDOWN'
-        Get all Linux hostings from the Combell API with pagination support.
+        Use this tool to list every Linux hosting environment that belongs to the authenticated Combell account. Each entry includes the hosting `domain_name` and `servicepack_id`, which you can pass into `LinuxHostingTool` or other tools for deeper inspection. Pagination is handled automatically.
+
+        **Returns**
+        - `linux_hostings`: array of Linux hosting summaries (`domain_name`, `servicepack_id`).
+        - `total_count`: integer count of the collected hosting records.
     MARKDOWN;
 
     /**
@@ -25,18 +29,13 @@ class LinuxHostingsTool extends Tool
      */
     public function handle(Request $request, Combell $combell): Response
     {
-        // Get pagination parameters from request
-        $pageSize = $request->get('page_size', 100);
-
-        // Use pagination to get all Linux hostings
         $hostings = $this->paginate(
-            fn($skip, $take) => $combell->linuxHostings()->getLinuxHostings($skip, $take),
-            $pageSize
+            fn ($skip, $take) => $combell->linuxHostings()->getLinuxHostings($skip, $take)
         );
 
         return Response::json([
-            "linux_hostings" => $hostings,
-            "total_count" => count($hostings)
+            'linux_hostings' => $hostings,
+            'total_count' => count($hostings),
         ]);
     }
 
@@ -47,8 +46,6 @@ class LinuxHostingsTool extends Tool
      */
     public function schema(JsonSchema $schema): array
     {
-        return [
-            "page_size" => JsonSchema::integer()->default(100)->description("Number of items per page (default: 100)"),
-        ];
+        return [];
     }
 }

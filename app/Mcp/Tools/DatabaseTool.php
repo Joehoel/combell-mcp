@@ -14,15 +14,14 @@ class DatabaseTool extends Tool
      * The tool's description.
      */
     protected string $description = <<<'MARKDOWN'
-        Get a specific database from the Combell API by database name. To know database names associated with a domain/hosting, use the LinuxHostingTool tool.
+        Use this tool when you know a MySQL database name and need its current configuration. You will receive the raw payload from `/mysqldatabases/{name}`, which is helpful after discovering databases via `LinuxHostingTool`.
 
-        This tool will give information on the following resources:
-            - Database name
-            - Database hostname
-            - Database user count
-            - Database max size (in MB)
-            - Database actual size (in MB)
-            - Account Identifier
+        **Returns**
+        A JSON object containing keys such as:
+        - `name`, `hostname`
+        - `user_count`
+        - `max_size`, `actual_size`
+        - `account_id`
     MARKDOWN;
 
     /**
@@ -30,11 +29,11 @@ class DatabaseTool extends Tool
      */
     public function handle(Request $request, Combell $combell): Response
     {
-        $databaseName = $request->get("database_name");
+        $databaseName = $request->get('database_name');
 
         $database = $combell->mySqlDatabases()->getMySqlDatabase($databaseName)->object();
 
-        if (!$database) {
+        if (! $database) {
             return Response::error("Database not found for name: {$databaseName}");
         }
 
@@ -49,7 +48,9 @@ class DatabaseTool extends Tool
     public function schema(JsonSchema $schema): array
     {
         return [
-            "database_name" => JsonSchema::string()->required()->description("The name of the database"),
+            'database_name' => JsonSchema::string()
+                ->required()
+                ->description('The exact MySQL database name to inspect.'),
         ];
     }
 }

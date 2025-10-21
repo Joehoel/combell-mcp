@@ -4,9 +4,7 @@ namespace App\Mcp\Tools;
 
 use App\Mcp\Traits\PaginationTrait;
 use Illuminate\JsonSchema\JsonSchema;
-use Illuminate\Support\Facades\Log;
 use Joehoel\Combell\Combell;
-use Joehoel\Combell\Dto\Account;
 use Laravel\Mcp\Request;
 use Laravel\Mcp\Response;
 use Laravel\Mcp\Server\Tool;
@@ -19,7 +17,7 @@ class AccountTool extends Tool
      * The tool's description.
      */
     protected string $description = <<<'MARKDOWN'
-        Get a specific account from the Combell API by domain identifier.
+        Use this tool when you know an account's public identifier (typically the primary domain name) and need the corresponding Combell account record. It enumerates `/accounts` until a match is found and returns the raw account payload (fields such as `id`, `identifier`, and `servicepack_id`).
     MARKDOWN;
 
     /**
@@ -27,17 +25,17 @@ class AccountTool extends Tool
      */
     public function handle(Request $request, Combell $combell): Response
     {
-        $domain = $request->get("domain");
+        $domain = $request->get('domain');
 
         // Use pagination to search through all accounts
         $accounts = $this->paginate(
-            fn($skip, $take) => $combell->accounts()->getAccounts($skip, $take)
+            fn ($skip, $take) => $combell->accounts()->getAccounts($skip, $take)
         );
 
         // Find the account by identifier
-        $account = collect($accounts)->firstWhere("identifier", $domain);
+        $account = collect($accounts)->firstWhere('identifier', $domain);
 
-        if (!$account) {
+        if (! $account) {
             return Response::error("Account not found for domain: {$domain}");
         }
 
@@ -52,7 +50,9 @@ class AccountTool extends Tool
     public function schema(JsonSchema $schema): array
     {
         return [
-            "domain" => JsonSchema::string()->required(),
+            'domain' => JsonSchema::string()
+                ->required()
+                ->description('The Combell account identifier you want to resolve (usually a domain name).'),
         ];
     }
 }
