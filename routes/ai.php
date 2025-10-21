@@ -1,5 +1,7 @@
 <?php
 
+use App\Mcp\Servers\CombellServer;
 use Laravel\Mcp\Facades\Mcp;
 
-// Mcp::web('/mcp/demo', \App\Mcp\Servers\PublicServer::class);
+Mcp::local("combell", CombellServer::class);
+Mcp::web("/mcp/combell", CombellServer::class);

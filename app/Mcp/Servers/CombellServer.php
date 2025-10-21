@@ -2,6 +2,12 @@
 
 namespace App\Mcp\Servers;
 
+use App\Mcp\Tools\AccountsTool;
+use App\Mcp\Tools\AccountTool;
+use App\Mcp\Tools\LinuxHostingsTool;
+use App\Mcp\Tools\LinuxHostingTool;
+use App\Mcp\Tools\DatabaseTool;
+use Joehoel\Combell\Resource\Accounts;
 use Laravel\Mcp\Server;
 
 class CombellServer extends Server
@@ -9,12 +15,12 @@ class CombellServer extends Server
     /**
      * The MCP server's name.
      */
-    protected string $name = 'Combell Server';
+    protected string $name = "Combell Server";
 
     /**
      * The MCP server's version.
      */
-    protected string $version = '0.0.1';
+    protected string $version = "0.0.1";
 
     /**
      * The MCP server's instructions for the LLM.
@@ -28,9 +34,7 @@ class CombellServer extends Server
      *
      * @var array<int, class-string<\Laravel\Mcp\Server\Tool>>
      */
-    protected array $tools = [
-        //
-    ];
+    protected array $tools = [AccountsTool::class, AccountTool::class, LinuxHostingsTool::class, LinuxHostingTool::class, DatabaseTool::class];
 
     /**
      * The resources registered with this MCP server.
