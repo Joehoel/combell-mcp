@@ -12,12 +12,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Register singleton for Combell
-        $this->app->singleton(Combell::class, function ($app) {
-            return new Combell(
-                config("services.combell.api_key"),
-                config("services.combell.api_secret"),
-            );
+        // Register Combell service to use request headers
+        $this->app->bind(Combell::class, function ($app) {
+            $request = $app->make('request');
+
+            // Get API credentials from request headers (set by middleware)
+            $apiKey = $request->header('X-API-Key') ?? config("services.combell.api_key");
+            $apiSecret = $request->header('X-API-Secret') ?? config("services.combell.api_secret");
+
+            return new Combell($apiKey, $apiSecret);
         });
     }
 
