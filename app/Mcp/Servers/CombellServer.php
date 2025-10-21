@@ -5,6 +5,7 @@ namespace App\Mcp\Servers;
 use App\Mcp\Tools\AccountsTool;
 use App\Mcp\Tools\AccountTool;
 use App\Mcp\Tools\DatabaseTool;
+use App\Mcp\Tools\DnsRecordsTool;
 use App\Mcp\Tools\LinuxHostingsTool;
 use App\Mcp\Tools\LinuxHostingTool;
 use Laravel\Mcp\Server;
@@ -32,6 +33,7 @@ class CombellServer extends Server
         - `linux_hostings`: enumerate every Linux hosting without requesting additional pages; use this when you need possible domains to inspect further.
         - `linux_hosting`: supply a hosting `domain` to retrieve full configuration details (IP, FTP/SSH credentials, PHP version, subsites, database names, usage limits).
         - `database`: give a MySQL `database_name` to obtain size metrics, hostnames, user counts, and owning `account_id`.
+        - `dns_records`: provide a `domain` (with optional filters) to receive the complete DNS zone contents, including record metadata, without manual pagination.
 
         Always prefer the most specific tool that answers the question. Returned payloads mirror the Combell API responses, so field names follow the snake_case format from the platform.
     MARKDOWN;
@@ -41,7 +43,7 @@ class CombellServer extends Server
      *
      * @var array<int, class-string<\Laravel\Mcp\Server\Tool>>
      */
-    protected array $tools = [AccountsTool::class, AccountTool::class, LinuxHostingsTool::class, LinuxHostingTool::class, DatabaseTool::class];
+    protected array $tools = [AccountsTool::class, AccountTool::class, LinuxHostingsTool::class, LinuxHostingTool::class, DatabaseTool::class, DnsRecordsTool::class];
 
     /**
      * The resources registered with this MCP server.
