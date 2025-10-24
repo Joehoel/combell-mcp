@@ -24,10 +24,6 @@ final class McpApiKeyAuth
             return response()->json(['error' => 'Missing API credentials'], 401);
         }
 
-        if ($apiKey !== config('app.mcp_api_key') || $apiSecret !== config('app.mcp_api_secret')) {
-            return response()->json(['error' => 'Invalid API credentials'], 403);
-        }
-
         return $next($request);
     }
 }
