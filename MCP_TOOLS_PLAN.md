@@ -4,14 +4,16 @@
 This plan outlines useful MCP tools for the Combell API that go beyond simple endpoint wrappers. Instead of creating one tool per API endpoint, we'll focus on tools that provide actionable insights and solve common management tasks for developers and system administrators.
 
 ## 🎯 **Mission Accomplished**
-**Successfully implemented higher-level tools that make basic API wrappers obsolete!**
+**Successfully implemented higher-level tools and removed obsolete legacy tools!**
 
 - ✅ **DomainHealthTool**: Unified domain health monitoring (combines domain listing + DNS validation)
 - ✅ **HostingOverviewTool**: Consolidated hosting dashboard (combines hosting + databases + SSL status)
 - ✅ **SDK Updated**: v1.0.5 with proper API response format handling
 - ✅ **Full Test Coverage**: All tools tested with proper mocking
+- ✅ **Legacy Tools Removed**: AccountsTool, LinuxHostingsTool, DnsRecordsTool deleted
+- ✅ **Clean Architecture**: Only essential tools remain for specific use cases
 
-**Impact**: Legacy tools like `AccountsTool`, `LinuxHostingsTool`, and `DnsRecordsTool` are now partially obsolete as users get richer, actionable insights from the new consolidated tools.
+**Impact**: Legacy basic API wrappers are now completely obsolete. Users get intelligent, consolidated insights instead of raw data dumps.
 
 ## Current Tools Status
 
@@ -19,13 +21,15 @@ This plan outlines useful MCP tools for the Combell API that go beyond simple en
 - **DomainHealthTool**: Comprehensive domain health monitoring (replaces need for separate domain + DNS queries)
 - **HostingOverviewTool**: Unified hosting dashboard with databases, SSL, and usage stats
 
-### ⚠️ **Legacy Tools (Partially Obsolete)**
-- **AccountsTool**: Basic account listing (still useful for raw account enumeration)
-- **AccountTool**: Detailed account information (still needed for specific account management)
-- **LinuxHostingsTool**: Basic hosting list (consider using `hosting_overview` for richer data)
-- **LinuxHostingTool**: Detailed hosting configuration (still needed for specific config tasks)
-- **DatabaseTool**: MySQL database details (still needed for database-specific operations)
-- **DnsRecordsTool**: DNS records with filtering (consider using `domain_health` for health insights)
+### ✅ **Remaining Tools (Essential)**
+- **AccountTool**: Detailed account information for specific account management
+- **LinuxHostingTool**: Detailed hosting configuration for specific config tasks
+- **DatabaseTool**: MySQL database details for database-specific operations
+
+### ❌ **Removed Legacy Tools**
+- ~~**AccountsTool**~~: Replaced by DomainHealthTool's domain-focused insights
+- ~~**LinuxHostingsTool**~~: Replaced by HostingOverviewTool's comprehensive view
+- ~~**DnsRecordsTool**~~: Replaced by DomainHealthTool's DNS health monitoring
 
 ## Planned Useful Tools
 

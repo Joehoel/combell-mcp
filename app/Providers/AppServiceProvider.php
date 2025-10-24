@@ -15,7 +15,7 @@ final class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         // Register Combell service to use request headers
-        $this->app->bind(Combell::class, function ($app): \Joehoel\Combell\Combell {
+        $this->app->bind(Combell::class, function ($app): Combell {
             $request = $app->make('request');
 
             // Get API credentials from request headers (set by middleware)

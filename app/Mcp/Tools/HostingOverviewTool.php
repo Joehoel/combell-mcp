@@ -156,7 +156,7 @@ final class HostingOverviewTool extends Tool
                 ];
             }
 
-            $certsInfo = array_map(fn($cert): array => [
+            $certsInfo = array_map(fn ($cert): array => [
                 'common_name' => $cert->common_name ?? '',
                 'expiration_date' => $cert->expiration_date ?? null,
                 'is_expired' => isset($cert->expiration_date) && now()->isAfter($cert->expiration_date),
