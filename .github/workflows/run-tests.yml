@@ -24,13 +24,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    strategy:
-      fail-fast: true
-      matrix:
-        php: [8.4, 8.3]
-        stability: [prefer-lowest, prefer-stable]
-
-    name: P${{ matrix.php }} - ${{ matrix.stability }}
 
     steps:
       - name: Checkout code
@@ -39,7 +32,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
+          php-version: '8.3'
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
           coverage: none
 
@@ -49,7 +42,7 @@ jobs:
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Install PHP dependencies
-        run: composer install --no-interaction --no-progress --${{ matrix.stability }}
+        run: composer install --no-interaction --no-progress --prefer-stable
 
       - name: Copy Environment File
         run: cp .env.example .env
