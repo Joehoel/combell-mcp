@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mcp\Tools;
 
 use App\Mcp\Traits\PaginationTrait;
@@ -9,7 +11,7 @@ use Laravel\Mcp\Request;
 use Laravel\Mcp\Response;
 use Laravel\Mcp\Server\Tool;
 
-class LinuxHostingsTool extends Tool
+final class LinuxHostingsTool extends Tool
 {
     use PaginationTrait;
 
@@ -30,7 +32,7 @@ class LinuxHostingsTool extends Tool
     public function handle(Request $request, Combell $combell): Response
     {
         $hostings = $this->paginate(
-            fn ($skip, $take) => $combell->linuxHostings()->getLinuxHostings($skip, $take)
+            fn (?int $skip, ?int $take): \Saloon\Http\Response => $combell->linuxHostings()->getLinuxHostings($skip, $take)
         );
 
         return Response::json([
@@ -42,7 +44,7 @@ class LinuxHostingsTool extends Tool
     /**
      * Get the tool's input schema.
      *
-     * @return array<string, \Illuminate\JsonSchema\JsonSchema>
+     * @return array<string, JsonSchema>
      */
     public function schema(JsonSchema $schema): array
     {

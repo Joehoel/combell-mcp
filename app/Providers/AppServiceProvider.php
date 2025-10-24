@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Joehoel\Combell\Combell;
 
-class AppServiceProvider extends ServiceProvider
+final class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
@@ -13,12 +15,12 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         // Register Combell service to use request headers
-        $this->app->bind(Combell::class, function ($app) {
+        $this->app->bind(Combell::class, function ($app): \Joehoel\Combell\Combell {
             $request = $app->make('request');
 
             // Get API credentials from request headers (set by middleware)
-            $apiKey = $request->header('X-API-Key') ?? config("services.combell.api_key");
-            $apiSecret = $request->header('X-API-Secret') ?? config("services.combell.api_secret");
+            $apiKey = $request->header('X-API-Key') ?? config('services.combell.api_key');
+            $apiSecret = $request->header('X-API-Secret') ?? config('services.combell.api_secret');
 
             return new Combell($apiKey, $apiSecret);
         });

@@ -1,16 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mcp\Servers;
 
 use App\Mcp\Tools\AccountsTool;
 use App\Mcp\Tools\AccountTool;
 use App\Mcp\Tools\DatabaseTool;
 use App\Mcp\Tools\DnsRecordsTool;
+use App\Mcp\Tools\DomainHealthTool;
+use App\Mcp\Tools\HostingOverviewTool;
 use App\Mcp\Tools\LinuxHostingsTool;
 use App\Mcp\Tools\LinuxHostingTool;
 use Laravel\Mcp\Server;
 
-class CombellServer extends Server
+final class CombellServer extends Server
 {
     /**
      * The MCP server's name.
@@ -26,14 +30,19 @@ class CombellServer extends Server
      * The MCP server's instructions for the LLM.
      */
     protected string $instructions = <<<'MARKDOWN'
-        This server brokers read-only access to the Combell API through the official PHP SDK. Choose tools based on the information you need:
+        This server provides intelligent, actionable insights into your Combell infrastructure. Choose tools based on your management needs:
 
-        - `accounts`: list Combell accounts with optional `asset_type` or `identifier` filters; returns an array with each account's `id`, `identifier`, and `servicepack_id` with pagination handled automatically.
-        - `account`: provide an account `domain` (identifier) to fetch the matching account record.
-        - `linux_hostings`: enumerate every Linux hosting without requesting additional pages; use this when you need possible domains to inspect further.
-        - `linux_hosting`: supply a hosting `domain` to retrieve full configuration details (IP, FTP/SSH credentials, PHP version, subsites, database names, usage limits).
-        - `database`: give a MySQL `database_name` to obtain size metrics, hostnames, user counts, and owning `account_id`.
-        - `dns_records`: provide a `domain` (with optional filters) to receive the complete DNS zone contents, including record metadata, without manual pagination.
+        **Health & Monitoring:**
+        - `domain_health`: Get comprehensive domain health overview including expiration dates, DNS configuration status, and issues requiring attention. Replaces the need for separate domain listing and DNS record checks.
+        - `hosting_overview`: Get unified view of all hosting accounts with databases, SSL certificates, usage statistics, and health status. Consolidates hosting, database, and SSL information.
+
+        **Detailed Management (Legacy Tools):**
+        - `accounts`: list Combell accounts with optional `asset_type` or `identifier` filters
+        - `account`: get detailed account information
+        - `linux_hostings`: list all Linux hosting accounts (consider using `hosting_overview` for richer information)
+        - `linux_hosting`: get detailed hosting configuration
+        - `database`: get MySQL database details
+        - `dns_records`: get DNS records with filtering (consider using `domain_health` for health insights)
 
         Always prefer the most specific tool that answers the question. Returned payloads mirror the Combell API responses, so field names follow the snake_case format from the platform.
     MARKDOWN;
@@ -41,14 +50,14 @@ class CombellServer extends Server
     /**
      * The tools registered with this MCP server.
      *
-     * @var array<int, class-string<\Laravel\Mcp\Server\Tool>>
+     * @var array<int, class-string<Server\Tool>>
      */
-    protected array $tools = [AccountsTool::class, AccountTool::class, LinuxHostingsTool::class, LinuxHostingTool::class, DatabaseTool::class, DnsRecordsTool::class];
+    protected array $tools = [DomainHealthTool::class, HostingOverviewTool::class, AccountsTool::class, AccountTool::class, LinuxHostingsTool::class, LinuxHostingTool::class, DatabaseTool::class, DnsRecordsTool::class];
 
     /**
      * The resources registered with this MCP server.
      *
-     * @var array<int, class-string<\Laravel\Mcp\Server\Resource>>
+     * @var array<int, class-string<Server\Resource>>
      */
     protected array $resources = [
         //
@@ -57,7 +66,7 @@ class CombellServer extends Server
     /**
      * The prompts registered with this MCP server.
      *
-     * @var array<int, class-string<\Laravel\Mcp\Server\Prompt>>
+     * @var array<int, class-string<Server\Prompt>>
      */
     protected array $prompts = [
         //

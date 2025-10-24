@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mcp\Tools;
 
 use App\Mcp\Traits\PaginationTrait;
@@ -9,7 +11,7 @@ use Laravel\Mcp\Request;
 use Laravel\Mcp\Response;
 use Laravel\Mcp\Server\Tool;
 
-class DnsRecordsTool extends Tool
+final class DnsRecordsTool extends Tool
 {
     use PaginationTrait;
 
@@ -35,7 +37,7 @@ class DnsRecordsTool extends Tool
         $service = $request->get('service');
 
         $records = $this->paginate(
-            fn ($skip, $take) => $combell->dnsRecords()->getRecords($domain, $skip, $take, $type, $recordName, $service)
+            fn (?int $skip, ?int $take): \Saloon\Http\Response => $combell->dnsRecords()->getRecords($domain, $skip, $take, $type, $recordName, $service)
         );
 
         return Response::json([
@@ -47,7 +49,7 @@ class DnsRecordsTool extends Tool
     /**
      * Get the tool's input schema.
      *
-     * @return array<string, \Illuminate\JsonSchema\JsonSchema>
+     * @return array<string, JsonSchema>
      */
     public function schema(JsonSchema $schema): array
     {

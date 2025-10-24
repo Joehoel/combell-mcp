@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mcp\Tools;
 
 use App\Mcp\Traits\PaginationTrait;
@@ -9,7 +11,7 @@ use Laravel\Mcp\Request;
 use Laravel\Mcp\Response;
 use Laravel\Mcp\Server\Tool;
 
-class AccountTool extends Tool
+final class AccountTool extends Tool
 {
     use PaginationTrait;
 
@@ -29,7 +31,7 @@ class AccountTool extends Tool
 
         // Use pagination to search through all accounts
         $accounts = $this->paginate(
-            fn ($skip, $take) => $combell->accounts()->getAccounts($skip, $take)
+            fn (?int $skip, ?int $take): \Saloon\Http\Response => $combell->accounts()->getAccounts($skip, $take)
         );
 
         // Find the account by identifier
@@ -45,7 +47,7 @@ class AccountTool extends Tool
     /**
      * Get the tool's input schema.
      *
-     * @return array<string, \Illuminate\JsonSchema\JsonSchema>
+     * @return array<string, JsonSchema>
      */
     public function schema(JsonSchema $schema): array
     {

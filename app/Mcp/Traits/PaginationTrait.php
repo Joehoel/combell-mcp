@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mcp\Traits;
 
 use Saloon\Http\Response;
@@ -10,8 +12,8 @@ trait PaginationTrait
      * Generic paginated request to the Combell API.
      * Automatically handles pagination using skip/take parameters.
      *
-     * @param callable $apiCall A callable that makes the API request with skip and take parameters
-     * @param int $pageSize Number of items per page (default: 100)
+     * @param  callable  $apiCall  A callable that makes the API request with skip and take parameters
+     * @param  int  $pageSize  Number of items per page (default: 100)
      * @return array All results combined from all pages
      */
     protected function paginate(
@@ -25,13 +27,13 @@ trait PaginationTrait
         while ($hasMore) {
             $response = $apiCall($skip, $pageSize);
 
-            if (!$response instanceof Response) {
+            if (! $response instanceof Response) {
                 break;
             }
 
             $data = $response->json();
 
-            if (!is_array($data) || empty($data)) {
+            if (! is_array($data) || $data === []) {
                 $hasMore = false;
             } else {
                 $allResults = array_merge($allResults, $data);
