@@ -125,4 +125,16 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | MCP API Credentials
+    |--------------------------------------------------------------------------
+    |
+    | API key and secret for authenticating MCP requests.
+    |
+    */
+
+    'mcp_api_key' => env('MCP_API_KEY'),
+    'mcp_api_secret' => env('MCP_API_SECRET'),
+
 ];
