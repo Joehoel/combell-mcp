@@ -3,7 +3,7 @@ name: Fix PHP code style issues
 on:
   push:
     paths:
-      - '**.php'
+      - "**.php"
 
 permissions:
   contents: write
@@ -14,25 +14,25 @@ jobs:
     timeout-minutes: 5
 
     steps:
-    - name: Checkout code
-    uses: actions/checkout@v5
-    with:
-    ref: ${{ github.head_ref }}
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.head_ref }}
 
-    - name: Setup PHP
-     uses: shivammathur/setup-php@v2
-       with:
-         php-version: '8.4'
-      extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
-      coverage: none
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
+          coverage: none
 
-    - name: Install PHP dependencies
-    run: composer install --no-interaction --no-progress
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --no-progress
 
-    - name: Fix PHP code style issues
-    run: composer lint:fix
+      - name: Fix PHP code style issues
+        run: composer lint:fix
 
-    - name: Commit changes
-    uses: stefanzweifel/git-auto-commit-action@v7
-    with:
-    commit_message: fix: code style fixes with Pint and Rector
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "fix: code style fixes with pint and rector [skip ci]"
