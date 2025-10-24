@@ -1,5 +1,6 @@
 <?php
 
+// Test comment for workflow
 declare(strict_types=1);
 
 namespace Database\Seeders;
