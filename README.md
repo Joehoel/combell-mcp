@@ -42,9 +42,7 @@ This Laravel 12 application exposes a Model Context Protocol (MCP) server that c
    ```
 2. In Cursor, open **Settings → MCP Servers → Add HTTP Server**.
 3. Choose a name (for example, `Combell`) and set the URL to `http://127.0.0.1:8000/mcp/combell`.
-4. Provide the headers required by the `mcp.auth` middleware:
-   - `X-API-Key`: same value as `COMBELL_API_KEY`
-   - `X-API-Secret`: same value as `COMBELL_API_SECRET`
+4. When prompted for authentication, pick **HTTP Basic** and enter your Combell API token as the username and your API secret as the password. (The server also accepts the `X-API-Key` / `X-API-Secret` headers for local testing.)
 5. Save the configuration. Cursor can now invoke the Combell MCP server while the Laravel app is running.
 
 ## Development workflow
