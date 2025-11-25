@@ -13,6 +13,7 @@
         "joehoel/combell-php-sdk": "^1.0",
         "laravel/framework": "^12.0",
         "laravel/mcp": "^0.3.0",
+        "laravel/passport": "^12.4",
         "laravel/tinker": "^2.10.1",
         "nunomaduro/essentials": "^1.0"
     },
